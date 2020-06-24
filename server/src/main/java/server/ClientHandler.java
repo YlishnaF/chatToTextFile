@@ -68,6 +68,20 @@ public class ClientHandler {
                                     server.subscribe(this);
                                     System.out.println("Клиент: " + nick + " подключился" + socket.getRemoteSocketAddress());
 
+                                    File file = new File("client/src/main/java/client/history_"+nick+".txt");
+                                    try
+                                    {
+                                        boolean created = file.createNewFile();
+                                        if(created)
+                                            System.out.println("File has been created");
+                                    }
+                                    catch(IOException ex){
+
+                                        System.out.println(ex.getMessage());
+                                    }
+                                    writeToChat(nick);
+
+
 
                                     socket.setSoTimeout(0);
                                     break;
@@ -145,4 +159,31 @@ public class ClientHandler {
     public String getLogin() {
         return login;
     }
+
+    public static void writeToFile(String nick, String msg , String sender){
+        File file = new File("client/src/main/java/client/history_"+nick+".txt");
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+            String lineSp=System.getProperty("line.separator");
+            bw.write(sender+": "+msg+lineSp);
+            bw.flush();
+            bw.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void writeToChat(String nick) throws IOException {
+        File file = new File("client/src/main/java/client/history_"+nick+".txt");
+        BufferedReader br  = new BufferedReader(new FileReader(file));
+        String lineText = br.readLine();
+        int quantityLine = 0;
+        while (lineText!=null&& (quantityLine<5)){
+            System.out.println(lineText);
+            lineText = br.readLine();
+            quantityLine++;
+        }
+
+    }
 }
+
