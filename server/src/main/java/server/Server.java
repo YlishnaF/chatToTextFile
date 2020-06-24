@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
-
+import static server.ClientHandler.writeToFile;
 
 
 
@@ -50,8 +50,7 @@ public class Server {
         for (ClientHandler c : clients) {
             c.sendMsg(nick + ": " + msg);
             String nickToWriteFile = c.getNick();
-
-
+            writeToFile(nickToWriteFile, msg, nick);
         }
 
     }
@@ -65,7 +64,8 @@ public class Server {
                 c.sendMsg(message);
                 if (!sender.getNick().equals(receiver)) {
                     sender.sendMsg(message);
-
+                    writeToFile(sender.getNick(),msg, sender.getNick());
+                    writeToFile(receiver,msg, sender.getNick());
                 }
                 return;
             }
